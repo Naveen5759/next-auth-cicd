@@ -35,7 +35,7 @@ export default function Signup() {
         setMessage(data.message || "Signup failed");
       }
     } catch(error) {
-      setMessage("Error signing up");
+      setMessage("Error signing up: " + error);
     }
   };
 

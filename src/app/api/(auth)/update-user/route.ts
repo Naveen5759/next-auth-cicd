@@ -1,9 +1,9 @@
 import connectDB from "@/db/db";
 import { generateToken } from "@/helpers/jwtAuth";
 import User from "@/models/userModel";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
         await connectDB();
   const reqBody = await request.json();
   const { userId, username, email } = reqBody;
