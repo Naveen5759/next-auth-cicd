@@ -21,22 +21,27 @@ jobs:
         run: npm install
       - name: Run build
         run: npm run build
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-app-build
-          path: ./dist
+      # - name: Upload build artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: my-app-build
+      #     path: ./dist
   deploy:
     name: Deploy to Server
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          name: my-app-build
-      - name: Deploy to server
-        run: |
-          echo "Deploying to server..."
-          # Add your deployment commands here
+          node-version: '18'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Deploy to vercel
+        run: npx vercel --token ${{secret.VERCEL_WITH_GITHUB}} --prod --confirm
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_TEAM_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
